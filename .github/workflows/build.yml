@@ -13,6 +13,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.15
+
     - name: install gokr-packer
       run: go get -u github.com/gokrazy/tools/cmd/gokr-packer
 
