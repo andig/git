@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  diskimage:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: install gokr-packer
+      run: go get -u github.com/gokrazy/tools/cmd/gokr-packer
+
+    - name: generate gokrazy disk image
+      run: |
+        export PATH=$PATH:$(go env GOPATH)/bin
+        gokr-packer -overwrite=full.img -target_storage_bytes=1610612736 github.com/gokrazy/hello
+
+    - name: add ext4
+      run: |
+        ls /dev
+        mkdir /tmp/sda
+        mount -o loop full.img /tmp/sda
+        mkfs.ext4 -q /tmp/sda
