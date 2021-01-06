@@ -23,8 +23,8 @@ jobs:
 
     - name: generate gokrazy disk image
       run: |
-        ls -l /opt/hostedtoolcache/go/1.15.6/x64/src/github.com/gokrazy || false
-        ls -l /home/runner/go/src/github.com/gokrazy || false
+        ls -l /opt/hostedtoolcache/go/1.15.6/x64/src/github.com/gokrazy || true
+        ls -l /home/runner/go/src/github.com/gokrazy || true
         go get github.com/gokrazy/kernel github.com/gokrazy/firmware
         go run github.com/gokrazy/tools/cmd/gokr-packer -overwrite=full.img -target_storage_bytes=1610612736 github.com/gokrazy/hello
         gokr-packer -overwrite=full.img -target_storage_bytes=1610612736 github.com/gokrazy/hello
