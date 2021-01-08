@@ -27,7 +27,6 @@ jobs:
 
     - name: add ext4
       run: |
-        ls /dev
         mkdir /tmp/sda
-        mount -o loop full.img /tmp/sda
+        sudo mount -o loop full.img /tmp/sda
         mkfs.ext4 -q /tmp/sda
