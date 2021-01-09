@@ -29,5 +29,5 @@ jobs:
       run: |
         losetup -f -P evcc_0.39.rootfs
         mount /dev/loop0
-        # sudo mount -o loop full.img /tmp/sda
-        mkfs.ext4 -q /tmp/sda
+        ls /dev/loop*
+        mkfs.ext4 -q /dev/loop0s2
