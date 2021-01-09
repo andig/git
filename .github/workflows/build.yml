@@ -23,11 +23,11 @@ jobs:
 
     - name: generate gokrazy disk image
       run: |
-        gokr-packer -overwrite_root=root.img github.com/gokrazy/hello
+        gokr-packer -overwrite_root=evcc_0.39.rootfs github.com/gokrazy/hello
 
     - name: add ext4
       run: |
-        losetup -f -P ./evcc_0.39.image
+        losetup -f -P evcc_0.39.rootfs
         mount /dev/loop0
         # sudo mount -o loop full.img /tmp/sda
         mkfs.ext4 -q /tmp/sda
