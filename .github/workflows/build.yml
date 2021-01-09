@@ -21,9 +21,9 @@ jobs:
     - name: install gokr-packer
       run: go get github.com/gokrazy/tools/cmd/gokr-packer
 
-    # - name: generate gokrazy disk image
-    #   run: |
-    #     gokr-packer -overwrite=image -target_storage_bytes=1153441792 github.com/gokrazy/breakglass github.com/gokrazy/hello
+    - name: generate gokrazy disk image
+      run: |
+        gokr-packer -overwrite=image -target_storage_bytes=1153441792 github.com/gokrazy/breakglass github.com/gokrazy/hello
 
     - name: add ext4
       run: |
@@ -34,4 +34,3 @@ jobs:
         sudo ssh-keygen -N '' -t rsa -f ${loop}p3/breakglass.host_key
         sudo install -m 600 ~/.ssh/id_*.pub ${loop}p3/breakglass.authorized_keys
         sudo umount ${loop}p3
-        
