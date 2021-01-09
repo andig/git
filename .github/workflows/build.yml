@@ -27,10 +27,7 @@ jobs:
 
     - name: add ext4
       run: |
-        mkdir /tmp/sda
-        lsmod | grep loop
-        modprobe loop
-        lsmod | grep loop
-        sudo mount full.img /tmp/sda
+        losetup -f -P ./evcc_0.39.image
+        mount /dev/loop0
         # sudo mount -o loop full.img /tmp/sda
         mkfs.ext4 -q /tmp/sda
