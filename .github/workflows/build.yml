@@ -23,11 +23,14 @@ jobs:
 
     - name: generate gokrazy disk image
       run: |
-        gokr-packer -overwrite_root=evcc_0.39.rootfs github.com/gokrazy/hello
+        gokr-packer -overwrite=image -target_storage_bytes=1153441792 github.com/gokrazy/breakglass github.com/gokrazy/hello
 
     - name: add ext4
       run: |
-        losetup -f -P evcc_0.39.rootfs
-        mount /dev/loop0
-        ls /dev/loop*
-        mkfs.ext4 -q /dev/loop0s2
+        loop=$(sudo losetup -f -P --show )
+        sudo mkfs.ext4 -q ${loop}p3
+        mkdir /tmp/evcc
+        sudo mount -t auto ${loop}p3 /tmp/evcc
+        sudo ssh-keygen -N '' -t rsa -f ${loop}p3/breakglass.host_key
+        sudo install -m 600 ~/.ssh/id_*.pub ${loop}p3/breakglass.authorized_keys
+        sudo umount ${loop}p3
