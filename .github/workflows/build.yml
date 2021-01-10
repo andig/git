@@ -18,22 +18,28 @@ jobs:
       with:
         go-version: ^1.15
 
+    - name: install gokr-packer
+      run: go get github.com/gokrazy/tools/cmd/gokr-packer
+
+    - name: generate gokrazy disk image
+      run: |
+        gokr-packer -overwrite=image -target_storage_bytes=1153441792 github.com/gokrazy/breakglass github.com/gokrazy/hello
+
+    - name: add ext4
+      run: |
+        loop=$(sudo losetup -f -P --show image)
+        sudo mkfs.ext4 -q ${loop}p4
+        mkdir /tmp/evcc
+        sudo mount -t auto ${loop}p4 /tmp/evcc
+        sudo ssh-keygen -N '' -t rsa -f ${loop}p4/breakglass.host_key
+        sudo install -m 600 ~/.ssh/id_*.pub ${loop}p4/breakglass.authorized_keys
+        sudo umount ${loop}p4
+
     - name: run
-      run: go run config.go
-      
-    # - name: install gokr-packer
-    #   run: go get github.com/gokrazy/tools/cmd/gokr-packer
-
-    # - name: generate gokrazy disk image
-    #   run: |
-    #     gokr-packer -overwrite=image -target_storage_bytes=1153441792 github.com/gokrazy/breakglass github.com/gokrazy/hello
-
-    # - name: add ext4
-    #   run: |
-    #     loop=$(sudo losetup -f -P --show image)
-    #     sudo mkfs.ext4 -q ${loop}p4
-    #     mkdir /tmp/evcc
-    #     sudo mount -t auto ${loop}p4 /tmp/evcc
-    #     sudo ssh-keygen -N '' -t rsa -f ${loop}p4/breakglass.host_key
-    #     sudo install -m 600 ~/.ssh/id_*.pub ${loop}p4/breakglass.authorized_keys
-    #     sudo umount ${loop}p4
+      run: |
+        ls /home/runner/.config/
+        ls /home/runner/.config/gokrazy
+        cat /home/runner/.config/gokrazy/http-password.txt
+        go run config.go
+        mkdir -P /home/runner/.config/gokrazy
+        echo evcc > /home/runner/.config/gokrazy/http-password.txt
