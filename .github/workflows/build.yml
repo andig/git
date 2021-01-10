@@ -23,7 +23,7 @@ jobs:
 
     - name: generate gokrazy disk image
       run: |
-        gokr-packer -overwrite=image -target_storage_bytes=1153441792 github.com/gokrazy/breakglass github.com/gokrazy/hello
+        gokr-packer -overwrite=image -target_storage_bytes=1258299392 github.com/gokrazy/breakglass github.com/gokrazy/hello
 
     - name: add ext4
       run: |
