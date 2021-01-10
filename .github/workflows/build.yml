@@ -23,23 +23,20 @@ jobs:
 
     - name: generate gokrazy disk image
       run: |
+        rm -rf /home/runner/.config/gokrazy
         gokr-packer -overwrite=image -target_storage_bytes=1258299392 github.com/gokrazy/breakglass github.com/gokrazy/hello
 
     - name: run
       run: |
         ls /home/runner/.config/
-        ls /home/runner/.config/gokrazy
         cat /home/runner/.config/gokrazy/http-password.txt
-        go run config.go
-        mkdir -P /home/runner/.config/gokrazy
-        echo evcc > /home/runner/.config/gokrazy/http-password.txt
 
     - name: add ext4
       run: |
         loop=$(sudo losetup -f -P --show image)
         sudo mkfs.ext4 -q ${loop}p4
-        temp=$(mktemp -d)
-        sudo mount -t auto ${loop}p4 $temp
-        sudo ssh-keygen -N '' -t rsa -f $temp/breakglass.host_key
-        sudo install -m 600 ~/.ssh/id_*.pub $temp/breakglass.authorized_keys
+        tmpdir=$(mktemp -d)
+        sudo mount -t auto ${loop}p4 $tmpdir
+        sudo ssh-keygen -N '' -t rsa -f $tmpdir/breakglass.host_key
+        sudo install -m 600 ~/.ssh/id_*.pub $tmpdir/breakglass.authorized_keys
         sudo umount ${loop}p4
